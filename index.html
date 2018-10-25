@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <title>Document</title>
+    <!--<link href="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/css/bootstrap.min.css" rel="stylesheet">-->
+    <link rel="stylesheet" href="style/swiper.min.css">
+    <link rel="stylesheet" href="style/new.css">
+    <link rel="stylesheet" href="style/iconfont.css">
+    <script src="scripts/jquery-1.12.4.min.js"></script>
+    <!--<script src="https://cdnjs.cloudflare.com/ajax/libs/twitter-bootstrap/4.1.1/js/bootstrap.min.js"></script>-->
+    <script type="text/javascript" src="scripts/chat.js" id="chatjs"></script>
+    <script src="scripts/newme.js"></script>
+    <script src="scripts/swiper.min.js"></script>
+    <style type="text/css">
+
+</style>
+</head>
+<body>
+    <div id="searchbox">
+        <input type="text" name="" value="" placeholder="输入搜索内容" id="searchinput">
+        <div id="resultbox">
+            
+        </div>
+    </div>
+    <!--模态框-->
+    
+    <div class="swiper-container swiper-container-father">
+        <div class="firstheader">
+            <ul>
+                <li class="logo">
+                    <a href="index.html">湖师</a>
+                </li>
+                <li class="logo search">
+                    <i class="icon iconfont icon-search"></i>
+                </li>
+            </ul>
+        </div>
+        <div class="swiper-wrapper">
+            <div class="swiper-slide slide1">
+                <div class="swiper-container swiper-container-son1">
+                    <div class="swiper-wrapper">
+                        <div class="swiper-slide swiper-slide0">
+
+                        </div>
+                        <div class="swiper-slide swiper-slide1">
+
+                        </div>
+                        <div class="swiper-slide swiper-slide2">
+
+                        </div>
+                        <div class="swiper-slide swiper-slide3">
+
+                        </div>
+                        <div class="swiper-slide swiper-slide4">
+
+                        </div>
+                    </div>
+                </div>
+                <div class="swiper-pagination"></div>
+                <div class="swiper-button-next pc"></div>
+                <div class="swiper-button-prev pc"></div>
+                <section class="chatList">
+                    <ul></ul>
+                </section>
+            </div>
+            <div class="swiper-slide slide2">
+                <div class="mesection">
+
+                </div>
+            <!--  <footer>
+
+            </footer> -->
+
+        </div>
+    </div>
+    <div class="swiper-pagination-father"></div>
+</div>
+
+
+
+<script type="text/javascript">
+    // $('header').html(header);
+    // $('footer').html(footer);
+    if (!getCookie('username') && getCookie('username') == '') {
+        location.href = 'login.html';
+    }
+    let links = $('link');
+    links.each(function (i) {
+        const element = links.eq(i);
+        let href = element.attr('href');
+        element.attr('href', href + "?random=" + Math.random())
+    })
+    $('chatjs').attr('src', "scripts/chat.js?random=" + Math.random());
+    const url = http + 'api/getChatList.php?random=' + Math.random();
+    let chatList = $('.chatList ul')[0];
+    $.ajax({
+        type: "get",
+        url: url,
+        dataType: "json",
+        contentType: "application/json;charset=UTF-8",
+        success: function (response) {
+            // $(this).call()
+            sessionStorage.setItem("chatList",JSON.stringify(response));
+            chatroom=response;
+            let data = response;
+            $.each(data, function (key) {
+                if (data.hasOwnProperty(key)) {
+                    const element = data[key];
+                    let first = element.title.substring(0, 1);
+                    let title;
+                    if (element.title.length > 20) {
+                        title = element.title.substring(0, 19) + "..."
+                    } else {
+                        title = element.title;
+                    }
+                    let body = element.body.substring(0, 50) + "...";
+
+                    let createDate = element.createDate.substring(5)
+                    const id = element.chatid;
+                    chatList.innerHTML += `
+                    <li class="hideli">
+                    <a href="chat.html?chatid=${id}">
+                    <div class="first">${first}</div>
+                    <h4>
+                    ${title}
+                    <small>${body}</small>
+                    <span class="createDate">${createDate}</span>
+                    </h4>
+                    </a>
+                    </li>
+
+                    `
+                }
+            })
+
+
+            let firstLetter = $('.first').get();
+            firstLetter.forEach(
+                el => {
+                    const bg = new color();
+                    el.style.background = bg.color;
+                }
+                )
+        }
+
+    })
+    var timer=null;
+    $(".chatList").on({  
+        touchstart: function(e) { 
+            // 长按事件触发  
+            var target = $(event.target);
+            timer = setTimeout(function() {  
+                timer = 0;  
+                var r=confirm("是否隐藏聊天室(假的。没接口)");
+                if (r == true){
+                    target.parents("li").addClass("hiddenthis")
+            // var liarr=[];
+            console.log(target.parents("li"))
+            // liarr
+        }
+    }, 1000);  
+            //长按400毫秒   
+            // e.preventDefault();    
+        },  
+        touchmove: function() {  
+            clearTimeout(timer);  
+            timer = 0;  
+        },  
+        touchend: function() {  
+            clearTimeout(timer);  
+            if (timer != 0) {  
+                // 点击事件  
+
+            }  
+            // return false;  
+        }  
+    },".hideli") 
+    $(".search").eq(0).on("click",function(){
+        $("#searchbox").css("display","block");
+    });
+    // console.log(response)
+    $("#searchinput").on("input",function(){
+        if ($("#searchinput").val()) {
+            var re2 = new RegExp($("#searchinput").val() + "+", "i")
+
+            var searchresult = JSON.parse(sessionStorage.getItem("chatList")).filter(function (x) {
+                return x.title.match(re2)
+
+            });
+            console.log(searchresult)
+            // console.log(sessionStorage.getItem("chatList"))
+            $("#resultbox").get(0).innerHTML=" "
+            for (key in searchresult){
+                $("#resultbox").get(0).innerHTML += `
+                    <a href="chat.html?chatid=${searchresult[key].chatid}">
+                    ${searchresult[key].title}
+                    <small>${searchresult[key].body}</small>
+                    <span class="createDate">${searchresult[key].createDate}</span>
+                    </a>
+
+
+                    `
+            }
+        }
+
+
+    })
+</script>
+
+
+<!--天气-->
+
+<script type="text/javascript">
+    var tqpicture = [
+    {
+        title: "晴",
+        name: "qing.jpg",
+    },
+    {
+        title: "阴",
+        name: "yin.png",
+    },
+    {
+        title: "多云",
+        name: "duoyun.jpg",
+    },
+    {
+        title: "小雨",
+        name: "xiaoyu.png",
+    }]
+    function f(response) {
+        for (var index in response.data.forecast) {
+            var str = response.data.forecast[index].fengli;
+                // 风力字符串
+                var arr = str.split(/\<!\[CDATA\[|]]>/);
+                var qihou = response.data.forecast[index].type;
+                // 气候
+                var riqi = response.data.forecast[index].date;
+                // 日期
+                var lowwd = response.data.forecast[index].low;
+                // 最低温度
+                var highwd = response.data.forecast[index].high;
+                // 最高温度
+                var fengxiang = response.data.forecast[index].fengxiang;
+                // 风向
+                var tq = `<h1>${response.data.city},${qihou}</h1>
+                <p>${riqi}</p>
+                <p>温度范围：${lowwd} 至 ${highwd}</p>
+                <p>${fengxiang}${arr[1]}</p>
+                `;
+                $(`.swiper-slide${index}`).html(tq)
+                var re = new RegExp(qihou + "+", "i")
+                var jieguo = tqpicture.find(function (x) {
+                    return x.title.match(re)
+                })
+                $(`.swiper-slide${index}`).css({
+                    "background":`url(images/${jieguo.name})`,
+                    "background-size":'100% 100%',
+                    "width":"100%",
+                });
+            }
+        }
+        if (sessionStorage.tqdata!=null){
+            var sessionresponse=JSON.parse(sessionStorage.getItem("tqdata"));
+            f(sessionresponse);
+        }
+
+
+</script>
+
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=ZyIPWflo23NsSisqYd4zn0dGVXuBdEQP"></script>
+<script>
+    function myFun(result) {
+        var cityName = result.name;
+        // console.log(result)
+        // alert("当前定位城市:"+cityName);
+        if (sessionStorage.tqdata==null){
+            var url = "http://wthrcdn.etouch.cn/weather_mini?city=" + cityName;
+
+            fetch(url).then(function (re) {
+                return re.json()
+            }).then(function (data) {
+                alert("fetch");
+                sessionStorage.setItem("tqdata",JSON.stringify(data));
+                f(data)
+            })
+            /*fetch(url).then(response=>response.json()).then(data =>{
+                console.log(data)
+            })*/
+        }
+
+        // }
+
+    }
+
+    var myCity = new BMap.LocalCity();
+    myCity.get(myFun);
+</script>
+
+<!--swiper-->
+
+<script defer>
+    // 父swiper
+
+    var swiperFather = new Swiper('.swiper-container-father', {
+        // prevButton: '.pre-page-btn',
+        // nextButton: '.next-page-btn',
+        resistanceRatio : 0,
+        pagination: {
+            el: '.swiper-pagination-father',
+            clickable: true,
+            renderBullet: function (index, className) {
+                return '<span class="' + className + '">' + (index + 1) + '</span>';
+            },
+            renderBullet: function (index, className) {
+                switch(index){
+                    case 0:text=`<i class="icon iconfont icon-comments"></i>
+                    <span>聊天室</span>`;break;
+                    case 1:text=`<i class="icon iconfont icon-account"></i>
+                    <span>我</span>`;break;
+                }
+                return '<span class="' + className + '">' + text + '</span>';
+            },
+        },
+    });
+
+    var swiperSon1 = new Swiper('.swiper-container-son1',{
+        // prevButton: '.swiper-button-prev',
+        // nextButton: '.swiper-button-next',
+        loop:true,
+        autoplay:true,
+        pagination: {
+            el: '.swiper-pagination',
+            type:'progressbar',
+            clickable :true,
+        },
+    });
+</script>
+
+</body>
+</html>

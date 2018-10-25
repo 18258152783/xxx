@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>我的留言</title>
+	<script type="text/javascript" src="scripts/jquery-1.12.4.min.js"></script>
+	<script src="scripts/chat.js"></script>
+</head>
+<body>
+	
+</body>
+<script type="text/javascript">
+	console.log(document.cookie);
+	console.log(getCookie("userid"))
+	$.ajax({
+		url:"api/myMesg.php",
+		type:"post",
+		dataType:"json",
+		data:{userid:getCookie("userid")},
+		success:function(response){
+			console.log(response);
+		},
+		error:function(){
+			console.log("err");
+		}
+	})
+</script>
+</html>

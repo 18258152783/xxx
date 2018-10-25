@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <script src="https://cdn.bootcss.com/axios/0.19.0-beta.1/axios.js"></script>
+    <title>Document</title>
+</head>
+<body>
+    <div id="app">
+        <input type="text" name="username"  placeholder="账号" v-model="username">
+        <br>
+        <input type="text" name="password" placeholder="密码" v-model="password">
+        <button type="button" @click="sb">登录</button>
+        <p>{{mes}}</p>
+    </div>
+    <script type="text/javascript" src="scripts/chat.js"></script>
+    <script>
+        var app=new Vue({
+            el:"#app",
+            data:{
+                username:"",
+                password:"",
+                urlone:http+'api/loginSave.php',
+                mes:""
+            },
+            methods:{
+                sb(){
+                    axios.post(this.urlone,'send=1&username='+this.username+'&password='+this.password).then(function(re){
+                        console.log(re.headers.date.toLocaleString());
+                        console.log(re.data);
+                        this.mes="0"
+                        this.mes=re.data.message;
+                        console.log(this.mes)
+                        if (re.data.valid) {
+                            location.href='index.html';
+                            console.log(re.data.message)
+              }
+                    }.bind(this))
+                }
+            }
+        })
+    </script>
+</body>
+</html>

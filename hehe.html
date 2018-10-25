@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+    <title></title>
+    <script src="scripts/jquery-1.12.4.min.js"></script>
+    <script src="scripts/swiper.min.js"></script>
+    <link rel="stylesheet" href="style/swiper.min.css">
+    <link rel="stylesheet" href="">
+    <style>
+    html{
+        height: 100%;
+    }
+    body{
+        height: 100%;
+    }
+    *{
+        margin: 0;
+        padding: 0;
+    }
+    #app{
+        height: 100%;
+    }
+    .daohang{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        bottom: 0!important;
+        background: rgba(0,0,0,1);
+        height:3.125rem/* 100px */;
+        position: fixed;
+        bottom: 0px;
+        margin: 0;
+        padding: 0;
+    }
+    .daohang .swiper-pagination-bullet {
+        width: 50%;
+        height: 100%;
+        display: inline-block;
+        border-radius: 100%;
+        background: transparent;
+        opacity: .2;
+        color: white;
+    }
+    .daohang .swiper-pagination-bullet-active {
+        opacity: 1;
+        background: transparent;
+}
+</style>
+</head>
+<body>
+    <div class="swiper-container" id="app">
+        <div class="swiper-wrapper">
+            <object data="index.html" class="swiper-slide" type=""></object>
+            <iframe src="me.html" class="swiper-slide" frameborder="0"></iframe>
+        </div>
+        <!-- 如果需要分页器 -->
+        <div class="swiper-pagination daohang"></div>
+    </div>
+    <script>
+        var mySwiper = new Swiper ('.swiper-container', {
+            pagination: {
+                el: '.swiper-pagination',
+                clickable: true,
+                renderBullet: function (index, className) {
+                    return '<span class="' + className + '">' + (index + 1) + '</span>';
+                },
+                renderBullet: function (index, className) {
+                   switch(index){
+                     case 0:text=`<i class="icon iconfont icon-comments"></i>
+                     <span>聊天室</span>`;break;
+                     case 1:text=`<i class="icon iconfont icon-account"></i>
+                     <span>我</span>`;break;
+                 }
+                 return '<span class="' + className + '">' + text + '</span>';
+             },
+         },
+
+        // // 如果需要前进后退按钮
+        // navigation: {
+        //     nextEl: '.swiper-button-next',
+        //     prevEl: '.swiper-button-prev',
+        // },
+    })
+        console.log(mySwiper)
+    </script>
+    <script>
+    // $('#box1').load("index.html");
+    // $('#box2').load("me.html")
+</script>
+</body>
+</html>

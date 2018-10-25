@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0">
+	<title>聊天室登陆</title>
+	<link rel="stylesheet" type="text/css" href="style/style.css">
+  <script type="text/javascript" src="scripts/jquery-1.12.4.min.js"></script>
+  <script src="scripts/rem.js"></script>
+ <!--  <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=ZyIPWflo23NsSisqYd4zn0dGVXuBdEQP"></script> -->
+  <style type="text/css">
+  .u{
+    display:flex;
+    justify-content: space-around;
+  }
+  .u button{
+   width:20%;
+ }
+ .u button:nth-child(2){
+  background: orange
+}
+</style>
+</head>
+<body>
+	<div id="login">
+    <div class="container">
+      <form>
+        <h1>用户登陆<small>欢迎您登陆聊天室</small></h1>
+        <label for="">
+          <input type="text" name="username" placeholder="请输入您的帐号">
+        </label>
+        <label for="">
+          <input type="password" name="password" placeholder="请输入您的密码">
+        </label>
+        <label for="" id="success"></label>
+        <label for="">
+          <button type="submit">登陆</button>
+          <button type="button" onclick="location.href='register.html'">注册</button>
+        </label>
+      </form>
+    </div>
+  </div>
+
+  <!-- 天气 -->
+  <!-- <script type="text/javascript">
+        function myFun(result){
+            var cityName = result.name;
+            // alert("当前定位城市:"+cityName);
+            var url="http://wthrcdn.etouch.cn/weather_mini?city="+cityName
+            $.ajax({
+                url:url,
+                type:"get",
+                dataType:"json",
+                success:function(response){
+                    console.log(response);
+                    if (response.desc=="OK") {
+                        console.log(response.data);
+                        var tq="今日在"+response.data.city+","+response.data.ganmao+",当前温度："+response.data.wendu+"摄氏度;最高温度："+response.data.forecast[0].high
+                        alert(tq)
+                        console.log(response.data.forecast)
+                    }
+                }
+            })
+        }
+        var myCity = new BMap.LocalCity();
+        myCity.get(myFun);
+    </script> -->
+  <script type="text/javascript" src="scripts/chat.js"></script>
+  <script type="text/javascript">
+        $('link').each(function(i){
+          let href = $('link').eq(i).attr('href');
+          $('link').eq(i).attr('href',href+"?random="+Math.random());
+        })
+        $('form').eq(0).on('submit',FormLoginSave)
+        function FormLoginSave(e){
+          e.preventDefault();
+          let oInput = $('form input');
+          let els = [];
+          
+          $('form input').each(function(index){
+            els.push(oInput.eq(index).val());
+          })
+          let url = http+'api/loginSave.php';
+          let formData = 'send=1&username='+els[0]+'&password='+els[1];
+
+          $.ajax({
+            type:"post",
+            url:url,
+            dataType:"json",
+            data:formData,
+            headers:{
+              "Content-type":"application/x-www-form-urlencoded"
+            },
+            success:function(response){
+              if (response.valid) {
+                $('success').html(response.message);
+                location.href='index.html';
+                console.log(response.message)
+              }
+              else{
+                $('success').html(response.message);
+                alert(response.message)
+              }
+            }
+          })
+        }
+      </script>
+    </body>
+    </html>

@@ -1,0 +1,300 @@
+*{
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+a{
+    display: inline-block;
+    text-decoration: none;
+}
+span{
+    display: inline-block;
+}
+ul,ol{
+    list-style: none;
+}
+
+
+@media screen and (max-width: 768px){
+    .pc{
+        display: none;
+    }
+    #searchbox{
+        width: 100%;
+        position: fixed;
+        height: 100%;
+        display: none;
+        left: 0;
+        top: 0;
+        background: rgba(0,0,0,0.8);
+        z-index: 99999;
+    }
+    #searchbox a{
+        color: white;
+    }
+    /*用户首页*/
+    .swiper-container-father{
+        position: fixed;
+        height: 100%;
+        width: 100%;
+        background: #EEEEEE;
+    }
+    .swiper-slide{
+        /*width: 100%!important;*/
+    }
+    .slide1{
+        padding-top: 60px;
+        overflow: auto;
+    }
+    .slide1 .swiper-slide{
+        background: url("../images/5-121204193R0-50.gif") no-repeat;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        background-position: center;
+        font-size: 14px;
+        color: white;
+    }
+    .swiper-container-son1{
+        width: 100%;
+        height: 150px;
+    }
+    .swiper-pagination{
+        width: 100%;
+        height: 5px;
+        border-radius: 5px;
+    }
+    .swiper-pagination>span{
+        border-radius: 25%;
+    }
+    .firstheader{
+        height: 60px;
+        background: rgb(19,21,70);
+        width: 100%;
+        position: fixed;
+        top: 0;
+        z-index: 99999;
+    }
+    .firstheader ul{
+        height: 60px;
+        width: 90%;
+        display: flex;
+        justify-content: space-between;
+        margin:0 auto;
+    }
+    .firstheader ul a,
+    .firstheader ul i{
+        display: flex;
+        line-height: 60px;
+        font-size: 20px;
+        color: #fff;
+    }
+    .firstheader ul i{
+        font-weight: 600;
+    }
+
+    .swiper-pagination-father{
+        height: 60px;
+        background: rgb(40,61,73);
+        position: fixed;
+        bottom: 0!important;
+        display: flex;
+        z-index: 9999;
+    }
+    .swiper-pagination-father>span{
+        border-radius: 0;
+        width: 100%;
+        height: 100%;
+        margin: 0!important;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        color: #F0F8FF;
+    }
+    .swiper-pagination-father>.swiper-pagination-bullet-active{
+        background: rgb(40,61,73);
+        color:#FFFFFF;
+    }
+    .slide2{
+        padding-top: 60px;
+    }
+
+
+
+    /*聊天列表*/
+
+
+
+    .chatList{
+        height: auto;
+        padding:0 0 60px 0;
+    }
+    .chatList ul{
+        width:100%;
+        margin:0 auto;
+        display: flex;
+        flex-flow:column;
+        justify-content: space-between;
+    }
+    .chatList ul li a{
+        display: flex;
+        justify-content: space-between;
+        height:auto;
+        /*min-height: 8vh;*/
+        overflow: hidden;
+        padding:10px;
+        border-bottom:1px solid #d7d7d7;
+        color: #000;
+    }
+    .chatList ul li .first{
+        width:60px;
+        height:100%;
+        min-height: 60px;
+        background: #222;
+        color:#fff;
+        line-height:60px;
+        text-align: center;
+        font-size:30px;
+        margin-right:10px;
+    }
+    .chatList ul li h4{
+        width:85%;
+        font-size: 20px;
+        /*34px*/
+        /*line-height: .875rem;*/
+        position: relative;
+    }
+    .chatList ul li h4 .createDate{
+        position: absolute;
+        right:0;
+        top:0;
+        font-size: 70%;
+        color:rgb(201, 201, 201);
+        font-weight: normal;
+    }
+    .chatList ul li h4 small{
+        display: block;
+        color:#666;
+        margin-top:0.3125rem;
+        /*10px*/
+        font-weight: normal;
+        font-size: 70%;
+    }
+    .hiddenthis{
+        display: none;
+    }
+
+
+    /*我的*/
+
+
+    .slide2 a{
+        color: #000;
+    }
+    .slide2 .mesection {
+        display: flex;
+        flex-flow: column;
+        /*padding-top: 4rem;*/
+    }
+
+    .slide2 .icon-back {
+        /*font-size: 2rem;*/
+        color: #fff;
+    }
+
+    .slide2 ol {
+        width: 100%;
+        background: #fff;
+        /*margin: .3125rem!* 10px *!auto;*/
+        display: flex;
+        flex-flow: column;
+        /*padding:.825rem!* 20px *! 0;*/
+    }
+
+    .slide2 ol li {
+        width: 85%;
+        margin: 0 auto;
+        font-size: 22px;
+        /*height: 50px;*/
+    }
+
+    .slide2 ol li .str{
+        border-bottom:1px solid #ddd;
+        height:1px;
+        margin:.25px 0;
+        width:100%;
+    }
+    .slide2 ol li.user{
+        display: flex;
+        flex-flow: row;
+    }
+    .slide2 ol li.user a{
+        width: 100px;
+        height: 100px;
+        display: block;
+        background: #000;
+        border-radius: 10px/* 10px */
+    }
+    .slide2 ol li h4 {
+        font-size: 25px;
+        padding:5px;
+    }
+
+    .slide2 ol li h4 small {
+        display: block;
+        font-weight: normal;
+        font-size: 75%;
+        color: #666;
+    }
+
+    .slide2 ol li i {
+        margin-right: 25px/* 25px */;
+        font-size:20px;
+    }
+
+    .slide2 ol li a img {
+        width:100%;
+        height:100%;
+       /* margin-right:.46875rem!* 15px *!;
+        border-radius: .3125rem!* 10px *!*/
+    ;
+    }
+
+
+    .phoneNumber{
+        padding-top: 100px;
+        position: absolute;
+        z-index: 9999;
+        width:100%;
+        top:0;
+        background:rgba(0,0,0,.5);
+        height:100vh;
+        display: none;
+        /*padding-top: 3.125rem;*/
+    }
+    .phoneNumber>div{
+        /*height:18.75rem!* 600px *!;*/
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    #phone{
+        /*width:9.375rem!* 300px *!;*/
+        /*height:1.5625rem!* 50px *!;*/
+        margin: 0 auto;
+        /*border-radius: .15625rem!* 5px *!;*/
+        border: 0;
+        /*box-shadow: 0 0 .625rem!* 20px *! skyblue inset;*/
+    }
+    .phoneNumber>div button{
+        /*width:10.9375rem!* 350px *!;*/
+        /*height:2.5rem!* 80px *!;*/
+        /*background: orange;*/
+        /*border: 0;*/
+        /*border-radius: .15625rem!* 5px *!;*/
+        /*margin-top: 1.5625rem!* 50px *!;*/
+    }
+}

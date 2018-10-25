@@ -1,0 +1,267 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+
+    <title>聊天室 用户信息</title>
+    <script type="text/javascript" src="scripts/jquery-1.12.4.min.js"></script>
+    <script src="scripts/rem.js"></script>
+    <link rel="stylesheet" href="style/iconfont.css">
+    <link rel="stylesheet" href="style/style.css">
+    <script src="scripts/chat.js" id="chatjs"></script>
+    <style type="text/css">
+    #me{
+        min-height: 100vh;
+    }
+    a{
+        color: #000;
+    }
+    section {
+        display: flex;
+        flex-flow: column;
+        padding-top: 4rem;
+    }
+
+    .icon-back {
+        font-size: 2rem;
+        color: #fff;
+    }
+
+    ol {
+        width: 100%;
+        background: #fff;
+        margin: .3125rem/* 10px */auto;
+        display: flex;
+        flex-flow: column;
+        padding:.825rem/* 20px */ 0;
+    }
+
+    ol li {
+        width: 85%;
+        margin: 0 auto;
+        font-size: .6875rem/* 22px */;
+    }
+    ol li .str{
+        border-bottom:1px solid #ddd;
+        height:1px;
+        margin:.78125rem/* 25px */ 0;
+        width:100%;
+    }
+    ol li.user{
+        display: flex;
+        flex-flow: row;
+    }
+    ol li.user a{
+        width: 3.125rem/* 100px */;
+        height: 3.125rem/* 100px */;
+        display: block;
+        background: #000;
+        border-radius: .3125rem/* 10px */
+    }
+    ol li h4 {
+        font-size: 0.85rem;
+        padding:0 .5rem
+    }
+
+    ol li h4 small {
+        display: block;
+        font-weight: normal;
+        font-size: 75%;
+        color: #666;
+    }
+
+    ol li i {
+        margin-right: .78125rem/* 25px */;
+        font-size:3rem;
+    }
+
+    ol li a img {
+        width:100%;
+        height:100%;
+        margin-right:.46875rem/* 15px */;
+        border-radius: .3125rem/* 10px */
+        ;
+    }
+
+
+    .phoneNumber{
+        position: absolute;
+        z-index: 9999;
+        width:100%;
+        top:0;
+        background:rgba(0,0,0,.5);
+        height:100vh;
+        display: none;
+        padding-top: 3.125rem;
+    }
+    .phoneNumber>div{
+        height:18.75rem/* 600px */;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+    }
+    #phone{
+        width:9.375rem/* 300px */;
+        height:1.5625rem/* 50px */;
+        margin: 0 auto;
+        border-radius: .15625rem/* 5px */;
+        border: 0;
+        box-shadow: 0 0 .625rem/* 20px */ skyblue inset;
+    }
+    .phoneNumber>div button{
+        width:10.9375rem/* 350px */;
+        height:2.5rem/* 80px */;
+        background: orange;
+        border: 0;
+        border-radius: .15625rem/* 5px */;
+        margin-top: 1.5625rem/* 50px */;
+    }
+</style>
+</head>
+
+<body>
+    <div id="me">
+        <header>
+            <ul>
+                <li>
+                    <a href="index.html" class="icon iconfont icon-back"></a>
+                </li>
+            </ul>
+        </header>
+        <section>
+
+        </section>
+       <!--  <footer>
+
+        </footer> -->
+        <div class="phoneNumber" id="phoneNumber">
+            <div>
+                <input type="text" id="phone" onclick='a()' ontouchstart='a()' name="">
+                <button  ontouchstart='updatePhone()' onclick='updatePhone()'>修改手机号码</button>
+            </div>
+       </div>
+   </div>
+   <script>
+    function user() {
+        // let section = document.getElementsByTagName('section')[0];
+
+        $.ajax({
+            url:http + "api/getUser.php?userid=" + getCookie('userId'),
+            type:"get",
+            dataType:"json",
+            success:function(response){
+                let userAvatar
+                if (response[0].userAvatar) {
+                    userAvatar = response[0].userAvatar.substring(3);
+                } else {
+                    userAvatar = 'images/avatar.jpg'
+                }
+                let userLevel;
+                if (response[0].userLevel == 0) {
+                    userLevel = '管理员'
+                } else {
+                    userLevel = '普通用户'
+                }
+
+                $('section').eq(0).html(`
+
+                    <ol>
+                    <li class="user">
+                    <a href="avatar.html"><img src="${userAvatar}"></a>
+                    <h4>${response[0].userName}<small>身份:${userLevel}</small><small>联系电话:${response[0].phoneNumber}</small></h4>
+                    </li>
+                    </ol>
+                    <ol>
+                    <li><i class="icon iconfont icon-form"></i><a href="admin.html">发布新的聊天室</a><div class="str"></div></li>
+                    <li><i class="icon iconfont icon-form"></i><a href="javascript:;" onclick="edituser()">完善信息</a><div class="str"></div></li>
+                    <li><i class="icon iconfont icon-text"></i><a href="editUser.html?userId=${response[0].userId}">修改密码</a><div class="str"></div></li>
+                    <li><i class="icon iconfont icon-help"></i><a href="help.html">帮助说明</a></li>
+                    </ol>
+                    <ol>
+                    <li><i class="icon iconfont icon-information"></i><a href="javascript:;" onclick="outCookie()">注销帐户</a><div class="str"></div></li>
+                    <li><i class="icon iconfont icon-delete"></i><a href="help.html">删除帐户</a></li>
+                    </ol>
+                    `)
+
+            }
+        }
+        )
+    }
+
+    user()
+
+    function edituser(){
+      $('#phoneNumber').css("display","block");
+  }
+
+  $('#phoneNumber').on(
+  {
+    touchstart:function(){
+        $('#phoneNumber').css("display","none");
+    },
+    click:function(){
+        $('#phoneNumber').css("display","none");
+    }
+}
+)
+
+  function a(e){
+      var ev = e || window.event;
+      ev.cancelBubble==true;
+      ev.stopPropagation()
+  }
+
+  function updatePhone(e){
+     // let phone = document.getElementById('phone')
+     var ev = e || window.event;
+     ev.cancelBubble==true;
+     ev.stopPropagation()
+     if($('#phone').val()==""){
+         alert('手机号码不能为空')
+         return false
+     }
+     let url = http + "api/editUserSave.php?send=1&phoneNumber="+$('#phone').val();
+     $.ajax({
+        url:url,
+        type:"get",
+        dataType:"json",
+        success:function(response){
+            console.log(response)
+            alert(response.message)
+            $('#phoneNumber').css("display","none");
+        }
+    })
+ }
+
+
+ // $('footer').html(footer);
+
+
+
+$('link').each(function(i){
+    let href=$('link').eq(i).attr('href');
+    $('link').eq(i).attr('href', href + "?random=" + Math.random())
+})
+
+function outCookie() {
+    removeCookie("username");
+    removeCookie("userid");
+    removeCookie("userlevel");
+    location.href = "login.html"
+}
+
+$("footer li").eq(0).attr("class","")
+$("footer li").eq(1).attr("class","active")
+
+</script>
+</body>
+
+</html>

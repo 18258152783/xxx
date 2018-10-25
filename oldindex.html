@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport"
+          content="width=device-width,user-scalable=no,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0">
+    <title>聊天室</title>
+    <script type="text/javascript" src="scripts/jquery-1.12.4.min.js"></script>
+    <script src="scripts/rem.js"></script>
+    <script type="text/javascript" src="scripts/swiper.min.js"></script>
+    <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet" href="style/iconfont.css">
+    <link rel="stylesheet" type="text/css" href="style/swiper.min.css">
+    <style type="text/css" media="screen">
+        .swiper-container {
+            width: 100%;
+            height: 200px;
+            padding-top: 3.125rem;
+        }
+
+        .swiper-slide {
+            /*width:100%!important;*/
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-size: 100% 100% !important;
+            font-size: .78125rem /* 25px */;
+            color: white;
+        }
+
+        .swiper-slide img {
+            width: 20%;
+        }
+    </style>
+</head>
+<body>
+<div id="app">
+    <header></header>
+    <div class="swiper-container">
+        <div class="swiper-wrapper" id="swiper-wrapper">
+            <div class="swiper-slide swiper-slide0">
+                <img src="images/5-121204193R0-50.gif" alt="">
+            </div>
+            <div class="swiper-slide swiper-slide1">
+                <img src="images/5-121204193R0-50.gif" alt="">
+            </div>
+            <div class="swiper-slide swiper-slide2">
+                <img src="images/5-121204193R0-50.gif" alt="">
+            </div>
+            <div class="swiper-slide swiper-slide3">
+                <img src="images/5-121204193R0-50.gif" alt="">
+            </div>
+            <div class="swiper-slide swiper-slide4">
+                <img src="images/5-121204193R0-50.gif" alt="">
+            </div>
+        </div>
+        <!-- 如果需要分页器 -->
+        <div class="swiper-pagination"></div>
+
+        <!-- 如果需要导航按钮 -->
+        <!-- <div class="swiper-button-prev"></div>
+        <div class="swiper-button-next"></div> -->
+    </div>
+    <section class="chatList">
+        <ul></ul>
+    </section>
+    <!-- <footer></footer> -->
+</div>
+
+
+<script type="text/javascript" src="scripts/chat.js" id="chatjs"></script>
+<script type="text/javascript">
+    $('header').html(header);
+    // $('footer').html(footer);
+    if (!getCookie('username') && getCookie('username') == '') {
+        location.href = 'login.html';
+    }
+    let links = $('link');
+    links.each(function (i) {
+        const element = links.eq(i);
+        let href = element.attr('href');
+        element.attr('href', href + "?random=" + Math.random())
+    })
+    $('chatjs').attr('src', "scripts/chat.js?random=" + Math.random());
+    const url = http + 'api/getChatList.php?random=' + Math.random();
+    let chatList = $('.chatList ul')[0];
+    $.ajax({
+        type: "get",
+        url: url,
+        dataType: "json",
+        contentType: "application/json;charset=UTF-8",
+        success: function (response) {
+            let data = response;
+            $.each(data, function (key) {
+                if (data.hasOwnProperty(key)) {
+                    const element = data[key];
+                    let first = element.title.substring(0, 1);
+                    let title;
+                    if (element.title.length > 20) {
+                        title = element.title.substring(0, 19) + "..."
+                    } else {
+                        title = element.title;
+                    }
+                    let body = element.body.substring(0, 50) + "...";
+
+                    let createDate = element.createDate.substring(5)
+                    const id = element.chatid;
+                    chatList.innerHTML += ` 
+                    <li class="hideli">
+                    <a href="chat.html?chatid=${id}">
+                    <div class="first">${first}</div>
+                    <h4>
+                    ${title}
+                    <small>${body}</small>
+                    <span class="createDate">${createDate}</span>
+                    </h4>
+                    </a>
+                    </li>
+
+                    `
+                }
+            })
+
+
+            let firstLetter = $('.first').get();
+            firstLetter.forEach(
+                el => {
+                    const bg = new color();
+                    el.style.background = bg.color;
+                }
+            )
+        }
+
+    })
+
+</script>
+<!-- 天气 -->
+<script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=ZyIPWflo23NsSisqYd4zn0dGVXuBdEQP"></script>
+<script type="text/javascript">
+    var tqpicture = [
+        {
+            title: "晴",
+            name: "qing.jpg",
+        },
+        {
+            title: "阴",
+            name: "yin.png",
+        },
+        {
+            title: "多云",
+            name: "duoyun.jpg",
+        },
+        {
+            title: "小雨",
+            name: "xiaoyu.png",
+        }]
+
+    function myFun(result) {
+        var cityName = result.name;
+        // alert("当前定位城市:"+cityName);
+        var url = "http://wthrcdn.etouch.cn/weather_mini?city=" + cityName
+        $.ajax({
+            url: url,
+            type: "get",
+            dataType: "json",
+            success: function (response) {
+                // console.log(response);
+                // console.log(response.data.forecast[0].fengli)
+                if (response.desc == "OK") {
+                    for (var index in response.data.forecast) {
+                        var str = response.data.forecast[index].fengli;
+                        // 风力字符串
+                        var arr = str.split(/\<!\[CDATA\[|]]>/);
+                        var qihou = response.data.forecast[index].type;
+                        // 气候
+                        var riqi = response.data.forecast[index].date;
+                        // 日期
+                        var lowwd = response.data.forecast[index].low;
+                        // 最低温度
+                        var highwd = response.data.forecast[index].high;
+                        // 最高温度
+                        var fengxiang = response.data.forecast[index].fengxiang;
+                        // 风向
+                        var tq = `<h1>${cityName},${qihou}</h1>
+                                <p>${riqi}</p>
+                                <p>温度范围：${lowwd} 至 ${highwd}</p>
+                                <p>${fengxiang}${arr[1]}</p>
+                                `;
+                        $(`.swiper-slide${index}`).html(tq)
+                        var re = new RegExp(qihou + "+", "i")
+                        var jieguo = tqpicture.find(function (x) {
+                            return x.title.match(re)
+                        })
+                        $(`.swiper-slide${index}`).css("background", `url(images/${jieguo.name})`);
+                    }
+                }
+            }
+        })
+    }
+
+    var myCity = new BMap.LocalCity();
+    myCity.get(myFun);
+</script>
+<script>
+    var mySwiper = new Swiper('.swiper-container', {
+        loop: true,
+        pagination: {
+            el: '.swiper-pagination',
+            clickable: 'true',
+        },
+        scrollbar: {
+            el: '.swiper-scrollbar',
+        },
+        autoplay: true,//等同于以下设置
+        /*autoplay: {
+          delay: 3000,
+          stopOnLastSlide: false,
+          disableOnInteraction: true,
+          },*/
+    })
+</script>
+</body>
+</html>

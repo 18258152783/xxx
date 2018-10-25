@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+	<title></title>
+	<link rel="stylesheet" href="">
+	<script type="text/javascript" src="scripts/jquery-1.12.4.min.js"></script>
+	<script type="text/javascript" src="scripts/chat.js"></script>
+	<link rel="stylesheet" type="text/css" href="style/style.css">
+	<style type="text/css" media="screen">
+	*{
+		margin: 0;
+		padding: 0;
+		box-sizing: border-box;
+	}
+	span{
+		display: inline-block;
+	}
+	html{
+		height:100%;
+	}
+	body{
+		height:100%;
+		overflow: hidden;
+	}
+	section{
+		height:100%;
+		overflow: hidden;
+	}
+	#header{
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		font-size: 30px;
+		text-align: center;
+	}
+	#header a{
+		color: red;
+	}
+	.box{
+		width: 100%;
+		margin-top: 150px;
+		height: 100%;
+		text-align: center;
+	}
+	.box span{
+		width:100px;
+		/*background: red;*/
+		text-align: right;
+		padding-right: 20px;
+	}
+	input{
+		margin-top: 50px;
+		height:25px;
+		line-height: 25px;
+	}
+	button{
+		width:50px;
+		height:20px;
+		margin-top: 50px;
+	}
+</style>
+
+</head>
+<body>
+	<header id="header" class="">
+		<a href="me.html" title="">点击此处返回</a>
+	</header><!-- /header -->
+	<section>
+		<form class="box">
+			<label><span>旧密码</span><input type="text" name="oldPassword" value=""></label>
+			<br>
+			<label><span>新密码</span><input type="text" name="newPassword" value=""></label>
+			<br>
+			<label><span>确认密码</span><input type="text" name="checkPassword" value=""></label>
+			<br>
+			<button type="submit">确认</button>
+		</form>
+	</section>
+	<script type="text/javascript">
+		var count=0;
+		let userId = getCookie('userid');
+		console.log(userId)
+		$('button').on(
+		{
+			click:function(e){
+				// $('input').each(function(i){
+				// 	if ($('input').eq(i).val().length==0) {
+				// 		var ii=i+1;
+				// 		alert("请填写第"+ii+"项");
+				// 		count=1
+				// 		if (count==1) {
+				// 			return false;
+				// 		}
+				// 	}
+				// })
+				if ($('input').eq(1).val()!=$('input').eq(2).val()) {
+					alert("确认密码错误")
+				}else{
+					const url = http+'api/changepassword.php?random='+Math.random();
+					let formData = "send=1&oldPassword="+$('input').eq(0).val()+"&newPassword="+$('input').eq(1).val()+"&checkPassword="+$('input').eq(2).val();
+					$.ajax({
+						url:url,
+						type:"post",
+						dataType:"json",
+						contentType: "application/json;charset=UTF-8",
+						data:formData,
+						headers:{
+							"Content-type":"application/x-www-form-urlencoded"
+						},
+						success:function(response){
+							alert(response.message);
+							if (response.valid) {
+								location.href="login.html"
+							}
+						}
+					})
+
+
+				}
+				return false;
+			},
+			// touchstart:function(e){
+			// 	if ($('input').eq(1).val()!=$('input').eq(2).val()) {
+			// 		alert("确认密码错误")
+			// 	}
+			// }
+		})
+	</script>
+</body>
+</html>

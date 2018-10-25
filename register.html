@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width,user-scalable=no,initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0">
+	<title>留言系统</title>
+    <script src="scripts/mavatar.js"></script>
+    <script src="scripts/rem.js"></script>
+    <link rel="stylesheet" href="style/style.css">
+</head>
+<body>
+	 <form id="register">
+        <h1>新用户注册<small>欢迎您加入聊天室</small></h1>
+        <label class="avatarbox">
+           <div id="avatar">头像必须上传</div>
+       </label>
+        <label for="">
+            <input type="text" name="username" id="username" placeholder="请输入您的帐号">
+        </label>
+        <label for="">
+            <input type="password" name="password" id="password" placeholder="请输入您的密码">
+        </label>
+        <label for="" id="success"></label>
+        <label for="">
+            <button type="submit">新用户注册</button>
+        </label>
+    </form>
+
+    <script type="text/javascript" src="scripts/chat.js"></script>
+    <script type="text/javascript">
+    	let oRegister = document.getElementById('register');
+    	oRegister.addEventListener('submit',clip,false);
+    	//事件监听，冒泡获取事件
+    	
+    	var avatar = new Mavatar({el: '#avatar',width:'100px',height:'100px',fileOnchange: function (e) {
+      		// console.log(e)
+    	}});
+    	//头像裁剪
+    	
+    	function clip(e){
+    		let oUsernamevalue = document.getElementById('username').value;
+    		let oPasswordvalue = document.getElementById('password').value;
+    		let oSuccess = document.getElementById('success');
+
+
+    		e.preventDefault();//阻止submi刷新
+    		avatar.imageClipper(function(data){
+    			alert('裁剪成功，生成的图片已覆盖在上传框内');
+    			console.log(data);
+    			//将图片上传至后台
+    			let httpurl = http+'api/registerSave.php';
+    			avatar.upload({
+    				url:httpurl,
+    				name:'avatar',
+    				data:{send:1,username:oUsernamevalue,password:oPasswordvalue,userAvatar:data},
+    				success:function(responseText){
+    					console.log(responseText);
+    					let data = JSON.parse(responseText);
+    					if (data.valid) {
+    						oSuccess.innerHTML = data.message+ " | <a href='login.html'>登陆</a>"
+    					}else{
+    						oSuccess.innerHTML = data.message;
+    					}
+    				},
+    				error:function(error){
+    					console.log(error)
+    				},
+    			});
+    		})
+    		
+    	}
+
+    	function reset(){
+    		avatar.resetImage();
+    	}
+    	//获取上传前的信息
+    	function getinfo(){
+    		var info = avatar.getfileInfo();
+    	}
+    	//获取base64
+    	function getdata(){
+    		var imadata = avatar.getDataUrl();
+    	}
+    </script>
+</body>
+</html>

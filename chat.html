@@ -1,0 +1,283 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta http-equiv="Cache-Control" content="no-cache, no-store, must-revalidate" />
+    <meta http-equiv="Pragma" content="no-cache" />
+    <meta http-equiv="Expires" content="0" />
+
+    <title>0.0</title>
+    <script type="text/javascript" src="scripts/jquery-1.12.4.min.js"></script>
+    <script src="scripts/rem.js"></script>
+    <script src="scripts/swiper.min.js"></script>
+    <link rel="stylesheet" href="style/iconfont.css">
+    <link rel="stylesheet" href="style/style.css">
+    <style>
+    section {
+        min-height: 100vh;
+        height: auto;
+        overflow: hidden;
+        background: #f9f9f9;
+        padding: 3rem 0 8rem 0;
+    }
+
+    section ol {
+        width: 100%;
+        margin: 1.5625rem/* 50px */
+        0;
+    }
+
+    section ol li {
+        width: 96%;
+        margin: 0 auto;
+        border-radius: .3125rem;
+        display: flex;
+        flex-flow: row;
+    }
+
+    section ol li .avatar {
+        display: flex;
+        flex-flow: column;
+    }
+
+    section ol li .avatar img {
+        width: 2rem;
+        height: 2rem;
+        border-radius: .3125rem/* 10px */
+        ;
+        box-shadow: 1px 1px 3px #888;
+    }
+
+    section ol li .avatar .username {
+        font-size: 0.65rem;
+        text-align: center;
+        margin-top: .3125rem;
+    }
+
+    section ol li .content {
+        max-width: 80vw;
+        line-height: 1.3rem;
+        word-break: break-all;
+        letter-spacing: 1px;
+        margin-left: .625rem;
+        font-size: 0.75rem;
+        display: flex;
+        justify-content: flex-start;
+    }
+
+    section ol li .content p {
+        align-self: flex-start;
+        /*清理多余空间*/
+        padding: .15625rem/* 5px */
+        .46875rem/* 15px */
+        ;
+        box-shadow: 1px 1px 3px #888;
+        background: #f1f1f1;
+        font-size: 0.55rem;
+        text-align: justify;
+
+        border-radius: .09375rem/* 3px */
+        ;
+    }
+
+    section ol li span {
+        font-size: 0.45rem;
+        margin-bottom: .15625rem/* 5px */
+        ;
+    }
+
+    footer {
+        display: flex;
+        justify-content: space-between
+    }
+
+    footer input,
+    footer button {
+        border: none;
+        outline: none;
+    }
+
+    footer input {
+        width: 85%;
+        font-size: 1rem;
+        text-indent: 1em;
+        border-top: 1px solid #000;
+    }
+
+    footer button {
+        width: 15%;
+        background: #f2aa22;
+        color: #fff;
+    }
+
+
+    section ol li.me {
+        display: flex;
+        flex-flow: row-reverse;
+    }
+
+    section ol li.me .content {
+        margin-right: .625rem;
+        color: #000;
+        display: flex;
+        justify-content: flex-end;
+    }
+
+    section ol li.me .content p {
+        background: #F3A304;
+        color: #fff;
+    }
+
+    section ol li.me .content span {
+        text-align: right;
+    }
+
+    .icon-back {
+        font-size: 2rem;
+        color: #fff;
+    }
+
+    #chatTitle {
+        color: #fff;
+        font-size: 1rem;
+        line-height: 3.125rem;
+        /*100px*/
+    }
+</style>
+</head>
+
+<body>
+    <div id="chat">
+        <header>
+            <ul>
+                <li>
+                    <a href="index.html" class="icon iconfont icon-back"></a>
+                </li>
+                <li id="chatTitle">
+                </li>
+            </ul>
+        </header>
+        <section></section>
+        <footer>
+            <input type="text" id="content" name="content" placeholder="" maxlength="140">
+            <button id="btn">发送</button>
+        </footer>
+    </div>
+    <script src="scripts/chat.js"></script>
+    <script>
+        if (!getCookie('username')) {
+            location.href = "login.html"
+        }
+
+        $('link').each(function(i){
+            let href=$('link').eq(i).attr('href');
+            $('link').eq(i).attr('href',href + "?random=" + Math.random())
+        })
+
+        let chatId = getQs('chatid');
+        let userId = getCookie('userid')
+        // console.log(chatId, getCookie('userid'))
+
+        $('#btn').on('click', chatAddContent);
+
+        function chatAddContent() {
+            let formData = "chatId=" + chatId + "&userId=" + userId + "&content=" + $('#content').val().strHTML();
+            $.ajax({
+                url:http + "api/messageAdd.php",
+                type:"post",
+                dataType:"json",
+                data:formData,
+                contentType: "application/json;charset=UTF-8",
+                headers:{
+              "Content-type":"application/x-www-form-urlencoded"
+            },
+                success:function(response){
+                    console.log(response)
+                    if (response.valid) {
+                        $('#content').attr('placeholder', response.message);
+                        $('section').eq(0).html('');
+                        $('#content').val('');
+                        let closeTimer;
+                        clearTimeout(closeTimer);
+                        closeTimer = setTimeout(() => {
+                            getchatAll(chatId)
+                        }, 300)
+                    }else{
+                       $('#content').attr('placeholder', response.message);
+                   }
+                }
+            })
+       }
+
+
+       function getchatAll(chatId) {
+        $.ajax({
+            type:"get",
+            url:http + 'api/getchatAll.php?chatId=' + chatId,
+            dataType:"json",
+            success:function(response){
+                if (response.valid) {
+                    $('#chatTitle').html(response.message[0].title + " - " + getCookie('username'));
+                    for (let i = 0; i < response.message.length; i++) {
+                        const el = response.message[i];
+                        // console.log(el);
+                        let userAvatar;
+                        if (el.userAvatar == null || el.userAvatar == '') {
+                            userAvatar = 'images/avatar.jpg';
+                        } else {
+                            userAvatar = el.userAvatar.substring(3);
+                        }
+
+                        let username = el.userName;
+                        let style;
+                        console.log(userId)
+                        if (userId === el.userid) {
+                            style = 'class="me"'
+                        } else {
+                            style = "";
+                        }
+                        let output = `
+                        <ol>
+
+                        <li ${style}>
+                        <div class="avatar">
+                        <img src="${userAvatar}" >
+                        <span class="username">${username}</span>
+                        </div>
+                        <div class="content">
+                        <p>${el.chatBody}</p>
+                        </div>
+                        </li>
+                        </ol>
+                        `
+                        $('section').get(0).innerHTML += output;
+                    }
+
+                }else{
+                     $('#chatTitle').html('什么信息都没有 - ' + getCookie('username'))
+                }
+
+            }
+        })
+
+    }
+
+
+   /* var closeTimer;
+    clearInterval(closeTimer);
+    closeTimer = setInterval(()=>{
+        let ol = document.getElementsByTagName('ol')[0];
+        ol.innerHTML = '';
+        ol.scrollTop = 99999;
+        getchatAll(chatId)
+    },60)*/
+
+    getchatAll(chatId)
+    // setInterval(getchatAll(chatId),30)
+</script>
+</body>
+
+</html>
